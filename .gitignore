@@ -1,10 +1,11 @@
 .idea/
 .gradle/
 build/
+.externalNativeBuild/
 obj/
 *.iml
 local.properties
 *.keystore
 gradle.properties
-
-TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
+release.properties
+google-services.json

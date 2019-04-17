@@ -1,7 +1,8 @@
 MY_LOCAL_PATH := $(call my-dir)
 LOCAL_PATH := $(MY_LOCAL_PATH)
 
-LOCAL_MODULE    := avutil 
+LOCAL_MODULE    := avutil
+LOCAL_SHORT_COMMANDS := true
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
     LOCAL_SRC_FILES := ./ffmpeg/armv7-a/libavutil.a
@@ -18,6 +19,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := avformat
+LOCAL_SHORT_COMMANDS := true
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
     LOCAL_SRC_FILES := ./ffmpeg/armv7-a/libavformat.a
@@ -34,6 +36,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := avcodec
+LOCAL_SHORT_COMMANDS := true
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
     LOCAL_SRC_FILES := ./ffmpeg/armv7-a/libavcodec.a
@@ -50,6 +53,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := avresample
+LOCAL_SHORT_COMMANDS := true
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
     LOCAL_SRC_FILES := ./ffmpeg/armv7-a/libavresample.a
@@ -66,6 +70,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := swscale
+LOCAL_SHORT_COMMANDS := true
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
     LOCAL_SRC_FILES := ./ffmpeg/armv7-a/libswscale.a
@@ -82,6 +87,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := crypto
+LOCAL_SHORT_COMMANDS := true
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
     LOCAL_SRC_FILES := ./boringssl/lib/libcrypto_armeabi-v7a.a
@@ -100,10 +106,11 @@ LOCAL_PATH := $(MY_LOCAL_PATH) # restore local path after include
 
 include $(CLEAR_VARS)
 
-LOCAL_CPPFLAGS := -Wall -std=c++11 -DANDROID -frtti -DHAVE_PTHREAD -finline-functions -ffast-math -O0
+LOCAL_CPPFLAGS := -Wall -std=c++14 -DANDROID -frtti -DHAVE_PTHREAD -finline-functions -ffast-math -O0
 LOCAL_C_INCLUDES += ./jni/boringssl/include/
 LOCAL_ARM_MODE := arm
 LOCAL_MODULE := tgnet
+LOCAL_SHORT_COMMANDS := true
 LOCAL_STATIC_LIBRARIES := crypto
 
 LOCAL_SRC_FILES := \
@@ -137,6 +144,7 @@ LOCAL_C_INCLUDES += ./jni/libwebp/src
 LOCAL_ARM_MODE := arm
 LOCAL_STATIC_LIBRARIES := cpufeatures
 LOCAL_MODULE := webp
+LOCAL_SHORT_COMMANDS := true
 
 ifneq ($(findstring armeabi-v7a, $(TARGET_ARCH_ABI)),)
   NEON := c.neon
@@ -216,7 +224,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_CPPFLAGS := -frtti
-LOCAL_CFLAGS += '-DVERSION="1.3.1"' -DFLAC__NO_MD5 -DFLAC__INTEGER_ONLY_LIBRARY -DFLAC__NO_ASM
+LOCAL_CFLAGS += -DVERSION=1.3.1 -DFLAC__NO_MD5 -DFLAC__INTEGER_ONLY_LIBRARY -DFLAC__NO_ASM
 LOCAL_CFLAGS += -D_REENTRANT -DPIC -DU_COMMON_IMPLEMENTATION -fPIC -DHAVE_SYS_PARAM_H
 LOCAL_CFLAGS += -O3 -funroll-loops -finline-functions
 LOCAL_LDLIBS := -lz -lm
@@ -224,6 +232,7 @@ LOCAL_C_INCLUDES := ./jni/exoplayer/libFLAC/include
 LOCAL_ARM_MODE := arm
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_MODULE := flac
+LOCAL_SHORT_COMMANDS := true
 
 LOCAL_SRC_FILES := \
 ./exoplayer/libFLAC/bitmath.c                     \
@@ -260,6 +269,7 @@ include $(CLEAR_VARS)
 
 LOCAL_ARM_MODE  := arm
 LOCAL_MODULE := sqlite
+LOCAL_SHORT_COMMANDS := true
 LOCAL_CFLAGS 	:= -w -std=c11 -Os -DNULL=0 -DSOCKLEN_T=socklen_t -DLOCALE_NOT_USED -D_LARGEFILE_SOURCE=1
 LOCAL_CFLAGS 	+= -DANDROID_NDK -DDISABLE_IMPORTGL -fno-strict-aliasing -fprefetch-loop-arrays -DAVOID_TABLES -DANDROID_TILE_BASED_DECODE -DANDROID_ARMV6_IDCT -DHAVE_STRCHRNUL=0
 
@@ -272,10 +282,11 @@ include $(CLEAR_VARS)
 LOCAL_PRELINK_MODULE := false
 
 LOCAL_MODULE 	:= tmessages.30
+LOCAL_SHORT_COMMANDS := true
 LOCAL_CFLAGS 	:= -w -std=c11 -Os -DNULL=0 -DSOCKLEN_T=socklen_t -DLOCALE_NOT_USED -D_LARGEFILE_SOURCE=1
 LOCAL_CFLAGS 	+= -Drestrict='' -D__EMX__ -DOPUS_BUILD -DFIXED_POINT -DUSE_ALLOCA -DHAVE_LRINT -DHAVE_LRINTF -fno-math-errno
 LOCAL_CFLAGS 	+= -DANDROID_NDK -DDISABLE_IMPORTGL -fno-strict-aliasing -fprefetch-loop-arrays -DAVOID_TABLES -DANDROID_TILE_BASED_DECODE -DANDROID_ARMV6_IDCT -ffast-math -D__STDC_CONSTANT_MACROS
-LOCAL_CPPFLAGS 	:= -DBSD=1 -ffast-math -Os -funroll-loops -std=c++11
+LOCAL_CPPFLAGS 	:= -DBSD=1 -ffast-math -Os -funroll-loops -std=c++14
 LOCAL_LDLIBS 	:= -ljnigraphics -llog -lz -latomic -lEGL -lGLESv2 -landroid
 LOCAL_STATIC_LIBRARIES := webp sqlite tgnet swscale avformat avcodec avresample avutil voip flac
 

@@ -55,7 +55,7 @@ import com.google.android.exoplayer2.video.VideoFrameMetadataListener;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
 import com.google.android.exoplayer2.video.spherical.CameraMotionListener;
 
-import org.telegram.messenger.Utilities;
+import org.telegramster.messenger.Utilities;
 
 import java.util.ArrayList;
 import java.util.Collections;

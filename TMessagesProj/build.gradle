@@ -10,6 +10,21 @@ configurations {
     compile.exclude module: 'support-v4'
 }
 
+// https://stackoverflow.com/a/20573171
+def propsFile = rootProject.file('release.properties')
+def props = new Properties()
+props.load(new FileInputStream(propsFile))
+def PROP_TELEGRAMSTER_APP_ID = props.TELEGRAMSTER_APP_ID
+def PROP_TELEGRAMSTER_APP_HASH = props.TELEGRAMSTER_APP_HASH
+def PROP_TELEGRAMSTER_HOCKEYAPP_HASH = props.TELEGRAMSTER_HOCKEYAPP_HASH
+def PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG = props.TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG
+def PROP_TELEGRAMSTER_SMS_HASH = props.TELEGRAMSTER_SMS_HASH
+def TELEGRAMSTER_APP_ID = "TELEGRAMSTER_APP_ID"
+def TELEGRAMSTER_APP_HASH = "TELEGRAMSTER_APP_HASH"
+def TELEGRAMSTER_HOCKEYAPP_HASH = "TELEGRAMSTER_HOCKEYAPP_HASH"
+def TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG = "TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG"
+def TELEGRAMSTER_SMS_HASH = "TELEGRAMSTER_SMS_HASH"
+
 dependencies {
     compileOnly 'org.checkerframework:checker-qual:2.5.2'
     compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
@@ -36,7 +51,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
-    defaultConfig.applicationId = "org.telegram.messenger"
+    defaultConfig.applicationId = "org.telegramster.messenger"
 
     sourceSets.main.jniLibs.srcDirs = ['./jni/']
 
@@ -81,9 +96,14 @@ android {
             debuggable true
             jniDebuggable true
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".beta"
+            //applicationIdSuffix ".beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", TELEGRAMSTER_APP_ID, "\""+PROP_TELEGRAMSTER_APP_ID+"\""
+            buildConfigField "String", TELEGRAMSTER_APP_HASH, "\""+PROP_TELEGRAMSTER_APP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
+            buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
         }
 
         debugMultidex {
@@ -94,16 +114,28 @@ android {
                 implementation 'com.android.support:multidex:1.0.3'
             }
             manifestPlaceholders = [applicationClassName:"MultiDexApplicationLoader"]
+            buildConfigField "String", TELEGRAMSTER_APP_ID, "\""+PROP_TELEGRAMSTER_APP_ID+"\""
+            buildConfigField "String", TELEGRAMSTER_APP_HASH, "\""+PROP_TELEGRAMSTER_APP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
+            buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
         }
 
+        /*
         HA {
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".beta"
+            //applicationIdSuffix ".beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", TELEGRAMSTER_APP_ID, "\""+PROP_TELEGRAMSTER_APP_ID+"\""
+            buildConfigField "String", TELEGRAMSTER_APP_HASH, "\""+PROP_TELEGRAMSTER_APP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
+            buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
         }
+        */
 
         release {
             debuggable false
@@ -112,6 +144,11 @@ android {
             minifyEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", TELEGRAMSTER_APP_ID, "\""+PROP_TELEGRAMSTER_APP_ID+"\""
+            buildConfigField "String", TELEGRAMSTER_APP_HASH, "\""+PROP_TELEGRAMSTER_APP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
+            buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
         }
     }
 
@@ -126,9 +163,11 @@ android {
 		java.srcDirs = ['src/multidex/java']
     }
 
+    /*
     sourceSets.HA {
         manifest.srcFile 'config/debug/AndroidManifest.xml'
     }
+    */
 
     sourceSets.release {
         manifest.srcFile 'config/release/AndroidManifest.xml'
@@ -145,6 +184,7 @@ android {
                 abiVersionCode = 1
             }
         }
+        /*
         x86 {
             ndk {
                 abiFilters "x86"
@@ -183,6 +223,7 @@ android {
                 abiVersionCode = 4
             }
         }
+        */
         arm64 {
             ndk {
                 abiFilters "arm64-v8a"
@@ -199,6 +240,7 @@ android {
                 abiVersionCode = 6
             }
         }
+        /*
         arm64_SDK23 {
             ndk {
                 abiFilters "arm64-v8a"
@@ -229,6 +271,7 @@ android {
                 abiVersionCode = 8
             }
         }
+        */
         afat {
             sourceSets.debug {
                 manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
@@ -262,7 +305,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 27
         versionName "5.4.0"
 
@@ -270,8 +313,8 @@ android {
 
         externalNativeBuild {
             ndkBuild {
-                arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-16", "-j8"
-                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+                arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-21", "-j8"
+                abiFilters "armeabi-v7a", "arm64-v8a"//, "x86", "x86_64"
             }
         }
 

@@ -99,7 +99,7 @@ build_one
 
 #arm v7n
 PREBUILT=$NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64
-PLATFORM=$NDK/platforms/android-16/arch-arm
+PLATFORM=$NDK/platforms/android-21/arch-arm
 LD=$PREBUILT/bin/arm-linux-androideabi-ld
 AR=$PREBUILT/bin/arm-linux-androideabi-ar
 NM=$PREBUILT/bin/arm-linux-androideabi-nm
@@ -115,7 +115,7 @@ build_one
 #
 #x86
 PREBUILT=$NDK/toolchains/x86-4.9/prebuilt/darwin-x86_64
-PLATFORM=$NDK/platforms/android-16/arch-x86
+PLATFORM=$NDK/platforms/android-21/arch-x86
 LD=$PREBUILT/bin/i686-linux-android-ld
 AR=$PREBUILT/bin/i686-linux-android-ar
 NM=$PREBUILT/bin/i686-linux-android-nm
