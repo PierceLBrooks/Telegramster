@@ -11,6 +11,11 @@
 #include <sys/stat.h>
 #include "image.h"
 #include "libtgvoip/client/android/tg_voip_jni.h"
+#include "native-lib.hpp"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 int registerNativeTgNetFunctions(JavaVM *vm, JNIEnv *env);
 int videoOnJNILoad(JavaVM *vm, JNIEnv *env);
@@ -18,11 +23,11 @@ int videoOnJNILoad(JavaVM *vm, JNIEnv *env);
 jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 	JNIEnv *env = 0;
     srand(time(NULL));
-    
+
 	if ((*vm)->GetEnv(vm, (void **) &env, JNI_VERSION_1_6) != JNI_OK) {
 		return -1;
 	}
-    
+
     if (imageOnJNILoad(vm, env) != JNI_TRUE) {
         return -1;
     }
@@ -36,8 +41,8 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
 
     tgvoipRegisterNatives(env);
-    
-	return JNI_VERSION_1_6;
+
+	return JNIOnLoad(vm, reserved);
 }
 
 void JNI_OnUnload(JavaVM *vm, void *reserved) {
@@ -48,7 +53,7 @@ JNIEXPORT void Java_org_telegramster_messenger_Utilities_aesIgeEncryption(JNIEnv
     jbyte *what = (*env)->GetDirectBufferAddress(env, buffer) + offset;
     unsigned char *keyBuff = (unsigned char *)(*env)->GetByteArrayElements(env, key, NULL);
     unsigned char *ivBuff = (unsigned char *)(*env)->GetByteArrayElements(env, iv, NULL);
-    
+
     AES_KEY akey;
     if (!encrypt) {
         AES_set_decrypt_key(keyBuff, 32 * 8, &akey);
@@ -232,3 +237,7 @@ JNIEXPORT void Java_org_telegramster_messenger_Utilities_clearDir(JNIEnv *env, j
     listdir(fileName, 1, docType, time);
     (*env)->ReleaseStringUTFChars(env, path, fileName);
 }
+
+#ifdef __cplusplus
+}
+#endif

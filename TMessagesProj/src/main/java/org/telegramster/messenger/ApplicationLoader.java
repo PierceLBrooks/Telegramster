@@ -175,7 +175,7 @@ public class ApplicationLoader extends Application {
             applicationContext = getApplicationContext();
         }
 
-        (new AppSignatureHelper(applicationContext)).getAppSignatures();
+        //(new AppSignatureHelper(applicationContext)).getAppSignatures();
 
         NativeLoader.initNativeLibs(ApplicationLoader.applicationContext);
         ConnectionsManager.native_setJava(false);

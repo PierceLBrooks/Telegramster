@@ -53,7 +53,7 @@ android {
 
     defaultConfig.applicationId = "org.telegramster.messenger"
 
-    sourceSets.main.jniLibs.srcDirs = ['./jni/']
+    sourceSets.main.jniLibs.srcDirs = ['./jni/', './jniLibs/']
 
     externalNativeBuild {
         ndkBuild {
@@ -313,12 +313,20 @@ android {
 
         externalNativeBuild {
             ndkBuild {
+                cFlags ""
+                cppFlags ""
                 arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-21", "-j8"
-                abiFilters "armeabi-v7a", "arm64-v8a"//, "x86", "x86_64"
+                abiFilters "armeabi-v7a"//, "arm64-v8a", "x86", "x86_64"
+            }
+            cmake {
+                cFlags ""
+                cppFlags ""
+                arguments "-DANDROID_STL=c++_shared"
+                abiFilters "armeabi-v7a"//, "arm64-v8a", "x86", "x86_64"
             }
         }
 
-        manifestPlaceholders = [applicationClassName:"ApplicationLoader"]
+        manifestPlaceholders = [applicationClassName:"ApplicationLoader",androidAppLibName:"sfml-activity-d",sfmlAppLibName:"native-lib"]
     }
 }
 

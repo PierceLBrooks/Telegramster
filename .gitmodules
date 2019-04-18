@@ -1,3 +1,6 @@
 [submodule "TMessagesProj/jni/libtgvoip"]
 	path = TMessagesProj/jni/libtgvoip
 	url = https://github.com/grishka/libtgvoip
+[submodule "submodules/SFML/SFML"]
+	path = submodules/SFML/SFML
+	url = https://github.com/SFML/SFML.git

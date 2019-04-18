@@ -106,6 +106,78 @@ LOCAL_PATH := $(MY_LOCAL_PATH) # restore local path after include
 
 include $(CLEAR_VARS)
 
+LOCAL_MODULE    := sfml-system
+LOCAL_SHORT_COMMANDS := true
+
+LOCAL_SRC_FILES := ./sfml/$(TARGET_ARCH_ABI)/libsfml-system-d.so
+
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := sfml-window
+LOCAL_SHORT_COMMANDS := true
+
+LOCAL_SRC_FILES := ./sfml/$(TARGET_ARCH_ABI)/libsfml-window-d.so
+
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := sfml-graphics
+LOCAL_SHORT_COMMANDS := true
+
+LOCAL_SRC_FILES := ./sfml/$(TARGET_ARCH_ABI)/libsfml-graphics-d.so
+
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := sfml-audio
+LOCAL_SHORT_COMMANDS := true
+
+LOCAL_SRC_FILES := ./sfml/$(TARGET_ARCH_ABI)/libsfml-audio-d.so
+
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := sfml-network
+LOCAL_SHORT_COMMANDS := true
+
+LOCAL_SRC_FILES := ./sfml/$(TARGET_ARCH_ABI)/libsfml-network-d.so
+
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := sfml-activity
+LOCAL_SHORT_COMMANDS := true
+
+LOCAL_SRC_FILES := ./sfml/$(TARGET_ARCH_ABI)/libsfml-activity-d.so
+
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := sfml-main
+LOCAL_SHORT_COMMANDS := true
+
+LOCAL_SRC_FILES := ./sfml/$(TARGET_ARCH_ABI)/libsfml-main-d.a
+
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := openal
+LOCAL_SHORT_COMMANDS := true
+
+LOCAL_SRC_FILES := ./sfml/$(TARGET_ARCH_ABI)/libopenal.so
+
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
 LOCAL_CPPFLAGS := -Wall -std=c++14 -DANDROID -frtti -DHAVE_PTHREAD -finline-functions -ffast-math -O0
 LOCAL_C_INCLUDES += ./jni/boringssl/include/
 LOCAL_ARM_MODE := arm
@@ -286,9 +358,10 @@ LOCAL_SHORT_COMMANDS := true
 LOCAL_CFLAGS 	:= -w -std=c11 -Os -DNULL=0 -DSOCKLEN_T=socklen_t -DLOCALE_NOT_USED -D_LARGEFILE_SOURCE=1
 LOCAL_CFLAGS 	+= -Drestrict='' -D__EMX__ -DOPUS_BUILD -DFIXED_POINT -DUSE_ALLOCA -DHAVE_LRINT -DHAVE_LRINTF -fno-math-errno
 LOCAL_CFLAGS 	+= -DANDROID_NDK -DDISABLE_IMPORTGL -fno-strict-aliasing -fprefetch-loop-arrays -DAVOID_TABLES -DANDROID_TILE_BASED_DECODE -DANDROID_ARMV6_IDCT -ffast-math -D__STDC_CONSTANT_MACROS
-LOCAL_CPPFLAGS 	:= -DBSD=1 -ffast-math -Os -funroll-loops -std=c++14
+LOCAL_CPPFLAGS 	:= -DBSD=1 -ffast-math -Os -funroll-loops -std=c++14 -I./../submodules/SFML/SFML/include
 LOCAL_LDLIBS 	:= -ljnigraphics -llog -lz -latomic -lEGL -lGLESv2 -landroid
-LOCAL_STATIC_LIBRARIES := webp sqlite tgnet swscale avformat avcodec avresample avutil voip flac
+LOCAL_STATIC_LIBRARIES := webp sqlite tgnet swscale avformat avcodec avresample avutil voip flac sfml-main
+LOCAL_SHARED_LIBRARIES := sfml-activity sfml-graphics sfml-window sfml-audio sfml-network sfml-system openal
 
 LOCAL_SRC_FILES     := \
 ./opus/src/opus.c \
@@ -548,7 +621,7 @@ ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 endif
 
 LOCAL_SRC_FILES     += \
-./jni.c \
+./jni.cpp \
 ./audio.c \
 ./image.c \
 ./video.c \
@@ -566,7 +639,10 @@ LOCAL_SRC_FILES     += \
 ./exoplayer/ffmpeg_jni.cc \
 ./fast-edge.cpp \
 ./genann.c \
-./secureid_ocr.cpp
+./secureid_ocr.cpp \
+./Log.cpp \
+./native-lib.cpp \
+./main.cpp
 
 include $(BUILD_SHARED_LIBRARY)
 

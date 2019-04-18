@@ -169,6 +169,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SFMLActivity"
+            android:screenOrientation="landscape">
+            <meta-data android:name="android.app.lib_name" android:value="${androidAppLibName}" />
+            <meta-data android:name="sfml.app.lib_name" android:value="${sfmlAppLibName}" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="org.telegramster.ui.IntroActivity"
             android:launchMode="singleTask"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">

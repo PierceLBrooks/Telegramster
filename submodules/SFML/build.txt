@@ -1,0 +1,2 @@
+
+ruby build.rb "MinGW Makefiles" "E:/UserData/Programs/AndroidSDK/ndk-bundle"
