@@ -28,6 +28,8 @@ jint JNIOnLoad(JavaVM *pjvm, void *reserved) {
 
     //gJvm->DetachCurrentThread();
 
+    LOG("JNIOnLoad");
+
     return JNI_VERSION_1_6;
 }
 

@@ -621,7 +621,7 @@ ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 endif
 
 LOCAL_SRC_FILES     += \
-./jni.cpp \
+./jni.c \
 ./audio.c \
 ./image.c \
 ./video.c \
@@ -641,7 +641,9 @@ LOCAL_SRC_FILES     += \
 ./genann.c \
 ./secureid_ocr.cpp \
 ./Log.cpp \
+./Logger.cpp \
 ./native-lib.cpp \
+./native.cpp \
 ./main.cpp
 
 include $(BUILD_SHARED_LIBRARY)

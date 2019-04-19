@@ -10,10 +10,6 @@
 #include "c_utils.h"
 #include "image.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 jclass jclass_NullPointerException;
 jclass jclass_RuntimeException;
 
@@ -936,7 +932,3 @@ JNIEXPORT void Java_org_telegramster_messenger_Utilities_stackBlurBitmap(JNIEnv*
     free(dv);
     AndroidBitmap_unlockPixels(env, bitmap);
 }
-
-#ifdef __cplusplus
-}
-#endif

@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
+import android.util.Log;
 
 import net.hockeyapp.android.Constants;
 
@@ -24,6 +25,7 @@ import java.util.zip.ZipFile;
 
 public class NativeLoader {
 
+    private final static String TAG = "NativeLoad";
     private final static int LIB_VERSION = 30;
     private final static String LIB_NAME = "tmessages." + LIB_VERSION;
     private final static String LIB_SO_NAME = "lib" + LIB_NAME + ".so";
@@ -119,6 +121,8 @@ public class NativeLoader {
 
         Constants.loadFromContext(context);
 
+        Log.d(TAG, LIB_NAME);
+
         try {
             try {
                 System.loadLibrary(LIB_NAME);
@@ -211,6 +215,8 @@ public class NativeLoader {
         } catch (Error e) {
             FileLog.e(e);
         }
+
+        Log.d(TAG, "initNativeLibs");
     }
 
     private static native void init(String path, boolean enable);

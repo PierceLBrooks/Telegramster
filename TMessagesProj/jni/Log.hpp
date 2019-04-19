@@ -33,7 +33,7 @@ namespace telegramster
             void logHere(const T& message)
             {
                 *ss << message;
-                LOGD(TAG, ss->str().c_str());
+                LOGI(TAG, ss->str().c_str());
                 ss->str("");
             }
             template <typename T>

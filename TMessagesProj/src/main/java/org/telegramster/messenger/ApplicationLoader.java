@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -38,6 +39,8 @@ import org.telegramster.ui.Components.ForegroundDetector;
 import java.io.File;
 
 public class ApplicationLoader extends Application {
+
+    private static final String TAG = "AppLoad";
 
     @SuppressLint("StaticFieldLeak")
     public static volatile Context applicationContext;
@@ -177,6 +180,8 @@ public class ApplicationLoader extends Application {
 
         //(new AppSignatureHelper(applicationContext)).getAppSignatures();
 
+        Log.d(TAG, "initNativeLibs");
+
         NativeLoader.initNativeLibs(ApplicationLoader.applicationContext);
         ConnectionsManager.native_setJava(false);
         new ForegroundDetector(this);
@@ -184,6 +189,8 @@ public class ApplicationLoader extends Application {
         applicationHandler = new Handler(applicationContext.getMainLooper());
 
         AndroidUtilities.runOnUIThread(ApplicationLoader::startPushService);
+
+        Log.d(TAG, "onCreate");
     }
 
     public static void startPushService() {
