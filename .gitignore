@@ -1,6 +1,7 @@
 .idea/
 .gradle/
 build/
+standalone/
 .externalNativeBuild/
 obj/
 *.iml
