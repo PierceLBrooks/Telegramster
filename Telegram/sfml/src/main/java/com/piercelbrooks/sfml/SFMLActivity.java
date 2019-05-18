@@ -7,8 +7,6 @@ import android.app.NativeActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
@@ -44,7 +42,7 @@ public abstract class SFMLActivity extends NativeActivity implements Lock {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         commonOnCreate(savedInstanceState, persistentState);
         super.onCreate(savedInstanceState, persistentState);
     }
@@ -71,7 +69,7 @@ public abstract class SFMLActivity extends NativeActivity implements Lock {
         super.finalize();
     }
 
-    private void commonOnCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+    private void commonOnCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         loadLibraries();
     }
 
@@ -107,7 +105,7 @@ public abstract class SFMLActivity extends NativeActivity implements Lock {
     }
 
     @Override
-    public Object getSystemService(@NonNull String name) {
+    public Object getSystemService(String name) {
         return super.getSystemService(name);
     }
 
