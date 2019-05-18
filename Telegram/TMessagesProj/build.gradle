@@ -1,0 +1,333 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+    google()
+    jcenter()
+}
+
+configurations {
+    compile.exclude module: 'support-v4'
+}
+
+// https://stackoverflow.com/a/20573171
+def propsFile = rootProject.file('release.properties')
+def props = new Properties()
+props.load(new FileInputStream(propsFile))
+def PROP_TELEGRAMSTER_APP_ID = props.TELEGRAMSTER_APP_ID
+def PROP_TELEGRAMSTER_APP_HASH = props.TELEGRAMSTER_APP_HASH
+def PROP_TELEGRAMSTER_HOCKEYAPP_HASH = props.TELEGRAMSTER_HOCKEYAPP_HASH
+def PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG = props.TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG
+def PROP_TELEGRAMSTER_SMS_HASH = props.TELEGRAMSTER_SMS_HASH
+def TELEGRAMSTER_APP_ID = "TELEGRAMSTER_APP_ID"
+def TELEGRAMSTER_APP_HASH = "TELEGRAMSTER_APP_HASH"
+def TELEGRAMSTER_HOCKEYAPP_HASH = "TELEGRAMSTER_HOCKEYAPP_HASH"
+def TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG = "TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG"
+def TELEGRAMSTER_SMS_HASH = "TELEGRAMSTER_SMS_HASH"
+
+dependencies {
+    compileOnly 'org.checkerframework:checker-qual:2.5.2'
+    compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.google.firebase:firebase-config:16.1.3'
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.android.gms:play-services-vision:16.2.0'
+    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
+    implementation 'com.google.android.gms:play-services-wearable:16.0.1'
+    implementation 'com.android.support:support-core-ui:28.0.0'
+    implementation 'com.android.support:support-compat:28.0.0'
+    implementation 'com.android.support:support-core-utils:28.0.0'
+    implementation 'com.android.support:support-v13:28.0.0'
+    implementation 'com.android.support:palette-v7:28.0.0'
+    implementation 'com.android.support:exifinterface:28.0.0'
+    implementation 'net.hockeyapp.android:HockeySDK:5.1.1'
+    implementation 'com.googlecode.mp4parser:isoparser:1.0.6'
+    implementation 'com.stripe:stripe-android:2.0.2'
+}
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig.applicationId = "org.telegramster.messenger"
+
+    sourceSets.main.jniLibs.srcDirs = ['./jni/', './jniLibs/']
+
+    externalNativeBuild {
+        ndkBuild {
+            path "jni/Android.mk"
+        }
+    }
+
+    lintOptions {
+        disable 'MissingTranslation'
+        disable 'ExtraTranslation'
+    }
+
+    dexOptions {
+        jumboMode = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("config/release.keystore")
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+
+        release {
+            storeFile file("config/release.keystore")
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+            signingConfig signingConfigs.debug
+            //applicationIdSuffix ".beta"
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", TELEGRAMSTER_APP_ID, "\""+PROP_TELEGRAMSTER_APP_ID+"\""
+            buildConfigField "String", TELEGRAMSTER_APP_HASH, "\""+PROP_TELEGRAMSTER_APP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
+            buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
+        }
+
+        debugMultidex {
+            initWith debug
+            minifyEnabled false
+			multiDexEnabled true
+			dependencies{
+                implementation 'com.android.support:multidex:1.0.3'
+            }
+            manifestPlaceholders = [applicationClassName:"MultiDexApplicationLoader"]
+            buildConfigField "String", TELEGRAMSTER_APP_ID, "\""+PROP_TELEGRAMSTER_APP_ID+"\""
+            buildConfigField "String", TELEGRAMSTER_APP_HASH, "\""+PROP_TELEGRAMSTER_APP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
+            buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
+        }
+
+        /*
+        HA {
+            debuggable false
+            jniDebuggable false
+            signingConfig signingConfigs.debug
+            //applicationIdSuffix ".beta"
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", TELEGRAMSTER_APP_ID, "\""+PROP_TELEGRAMSTER_APP_ID+"\""
+            buildConfigField "String", TELEGRAMSTER_APP_HASH, "\""+PROP_TELEGRAMSTER_APP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
+            buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
+        }
+        */
+
+        release {
+            debuggable false
+            jniDebuggable false
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", TELEGRAMSTER_APP_ID, "\""+PROP_TELEGRAMSTER_APP_ID+"\""
+            buildConfigField "String", TELEGRAMSTER_APP_HASH, "\""+PROP_TELEGRAMSTER_APP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
+            buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
+            buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
+        }
+    }
+
+    defaultConfig.versionCode = 1517
+
+    sourceSets.debug {
+        manifest.srcFile 'config/debug/AndroidManifest.xml'
+    }
+
+    sourceSets.debugMultidex {
+        manifest.srcFile 'config/debug/AndroidManifest.xml'
+		java.srcDirs = ['src/multidex/java']
+    }
+
+    /*
+    sourceSets.HA {
+        manifest.srcFile 'config/debug/AndroidManifest.xml'
+    }
+    */
+
+    sourceSets.release {
+        manifest.srcFile 'config/release/AndroidManifest.xml'
+    }
+
+    flavorDimensions "minApi"
+
+    productFlavors {
+        armv7 {
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+            ext {
+                abiVersionCode = 1
+            }
+        }
+        /*
+        x86 {
+            ndk {
+                abiFilters "x86"
+            }
+            ext {
+                abiVersionCode = 2
+            }
+        }
+        armv7_SDK23 {
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            minSdkVersion 23
+            ext {
+                abiVersionCode = 3
+            }
+        }
+        x86_SDK23 {
+            ndk {
+                abiFilters "x86"
+            }
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            minSdkVersion 23
+            ext {
+                abiVersionCode = 4
+            }
+        }
+        */
+        arm64 {
+            ndk {
+                abiFilters "arm64-v8a"
+            }
+            ext {
+                abiVersionCode = 5
+            }
+        }
+        x64 {
+            ndk {
+                abiFilters "x86_64"
+            }
+            ext {
+                abiVersionCode = 6
+            }
+        }
+        /*
+        arm64_SDK23 {
+            ndk {
+                abiFilters "arm64-v8a"
+            }
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            minSdkVersion 23
+            ext {
+                abiVersionCode = 7
+            }
+        }
+        x64_SDK23 {
+            ndk {
+                abiFilters "x86_64"
+            }
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            minSdkVersion 23
+            ext {
+                abiVersionCode = 8
+            }
+        }
+        */
+        afat {
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            ext {
+                abiVersionCode = 0
+            }
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.processManifest.doLast {
+                def abiVersion = variant.productFlavors.get(0).abiVersionCode
+                String manifestPath = "$manifestOutputDirectory/AndroidManifest.xml"
+                def manifestContent = file(manifestPath).getText()
+                manifestContent = manifestContent.replace(String.format('android:versionCode="%d"', defaultConfig.versionCode), String.format('android:versionCode="%s"', defaultConfig.versionCode * 10 + abiVersion))
+                file(manifestPath).write(manifestContent)
+            }
+        }
+    }
+
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        if(variant.buildType.name!="release" && !names.contains("afat")){
+            setIgnore(true)
+        }
+    }
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionName "5.4.0"
+
+		vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
+
+        externalNativeBuild {
+            ndkBuild {
+                cFlags ""
+                cppFlags ""
+                arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-21", "-j8"
+                abiFilters "armeabi-v7a"//, "arm64-v8a", "x86", "x86_64"
+            }
+            cmake {
+                cFlags ""
+                cppFlags ""
+                arguments "-DANDROID_STL=c++_static"
+                abiFilters "armeabi-v7a"//, "arm64-v8a", "x86", "x86_64"
+            }
+        }
+
+        manifestPlaceholders = [applicationClassName:"ApplicationLoader",androidAppLibName:"sfml-activity-d",sfmlAppLibName:"native-lib"]
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'

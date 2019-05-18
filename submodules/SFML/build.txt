@@ -1,2 +1,0 @@
-
-ruby build.rb "MinGW Makefiles" "E:/UserData/Programs/AndroidNDK" "E:/UserData/Programs/AndroidSDK"
