@@ -27,11 +27,6 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
         return -1;
     }
 
-    if (imageOnJNILoad(vm, env) != JNI_TRUE) {
-        logIt("imageOnJNILoad");
-        return -1;
-    }
-
     if (videoOnJNILoad(vm, env) != JNI_TRUE) {
         logIt("videoOnJNILoad");
         return -1;

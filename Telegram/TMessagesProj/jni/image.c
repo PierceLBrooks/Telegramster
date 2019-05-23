@@ -9,6 +9,7 @@
 #include <libwebp/webp/encode.h>
 #include "c_utils.h"
 #include "image.h"
+#include "Logger.h"
 
 jclass jclass_NullPointerException;
 jclass jclass_RuntimeException;
@@ -28,30 +29,52 @@ jclass createGlobarRef(JNIEnv *env, jclass class) {
     return 0;
 }
 
-jint imageOnJNILoad(JavaVM *vm, JNIEnv *env) {
+jint imageOnJNILoad(JavaVM *vm, JNIEnv *env, jclass *jclass_AnimatedFileDrawableStream, jmethodID *jclass_AnimatedFileDrawableStream_read, jmethodID *jclass_AnimatedFileDrawableStream_cancel) {
     jclass_NullPointerException = createGlobarRef(env, (*env)->FindClass(env, "java/lang/NullPointerException"));
     if (jclass_NullPointerException == 0) {
+        logIt("jclass_NullPointerException");
         return JNI_FALSE;
     }
     jclass_RuntimeException = createGlobarRef(env, (*env)->FindClass(env, "java/lang/RuntimeException"));
     if (jclass_RuntimeException == 0) {
+        logIt("jclass_RuntimeException");
         return JNI_FALSE;
     }
     
     jclass_Options = createGlobarRef(env, (*env)->FindClass(env, "android/graphics/BitmapFactory$Options"));
     if (jclass_Options == 0) {
+        logIt("jclass_Options");
         return JNI_FALSE;
     }
     jclass_Options_inJustDecodeBounds = (*env)->GetFieldID(env, jclass_Options, "inJustDecodeBounds", "Z");
     if (jclass_Options_inJustDecodeBounds == 0) {
+        logIt("jclass_Options_inJustDecodeBounds");
         return JNI_FALSE;
     }
     jclass_Options_outHeight = (*env)->GetFieldID(env, jclass_Options, "outHeight", "I");
     if (jclass_Options_outHeight == 0) {
+        logIt("jclass_Options_outHeight");
         return JNI_FALSE;
     }
     jclass_Options_outWidth = (*env)->GetFieldID(env, jclass_Options, "outWidth", "I");
     if (jclass_Options_outWidth == 0) {
+        logIt("jclass_Options_outWidth");
+        return JNI_FALSE;
+    }
+
+    *jclass_AnimatedFileDrawableStream = createGlobarRef(env, (*env)->FindClass(env, "org/telegramster/messenger/AnimatedFileDrawableStream"));
+    if (*jclass_AnimatedFileDrawableStream == 0) {
+        logIt("jclass_AnimatedFileDrawableStream");
+        return JNI_FALSE;
+    }
+    *jclass_AnimatedFileDrawableStream_read = (*env)->GetMethodID(env, *jclass_AnimatedFileDrawableStream, "read", "(II)I");
+    if (*jclass_AnimatedFileDrawableStream_read == 0) {
+        logIt("jclass_AnimatedFileDrawableStream_read");
+        return JNI_FALSE;
+    }
+    *jclass_AnimatedFileDrawableStream_cancel = (*env)->GetMethodID(env, *jclass_AnimatedFileDrawableStream, "cancel", "()V");
+    if (*jclass_AnimatedFileDrawableStream_cancel == 0) {
+        logIt("jclass_AnimatedFileDrawableStream_cancel");
         return JNI_FALSE;
     }
     
