@@ -10,6 +10,7 @@
 #include <libyuv.h>
 #include "tgnet/ConnectionsManager.h"
 #include "c_utils.h"
+#include "Logger.h"
 
 extern "C" {
 #include <libavformat/avformat.h>
@@ -583,14 +584,17 @@ jint Java_org_telegramster_ui_Components_AnimatedFileDrawable_getVideoFrame(JNIE
 jint videoOnJNILoad(JavaVM *vm, JNIEnv *env) {
     jclass_AnimatedFileDrawableStream = (jclass) env->NewGlobalRef(env->FindClass("org/telegramster/messenger/AnimatedFileDrawableStream"));
     if (jclass_AnimatedFileDrawableStream == 0) {
+        logIt("jclass_AnimatedFileDrawableStream");
         return JNI_FALSE;
     }
     jclass_AnimatedFileDrawableStream_read = env->GetMethodID(jclass_AnimatedFileDrawableStream, "read", "(II)I");
     if (jclass_AnimatedFileDrawableStream_read == 0) {
+        logIt("jclass_AnimatedFileDrawableStream_read");
         return JNI_FALSE;
     }
     jclass_AnimatedFileDrawableStream_cancel = env->GetMethodID(jclass_AnimatedFileDrawableStream, "cancel", "()V");
     if (jclass_AnimatedFileDrawableStream_cancel == 0) {
+        logIt("jclass_AnimatedFileDrawableStream_cancel");
         return JNI_FALSE;
     }
 

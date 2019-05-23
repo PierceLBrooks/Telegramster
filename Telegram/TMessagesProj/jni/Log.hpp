@@ -4,8 +4,8 @@
 #ifndef TELEGRAMSTER_LOG_HPP
 #define TELEGRAMSTER_LOG_HPP
 
-#include <sstream>
 #include <android/log.h>
+#include <sstream>
 
 #define TAG "NATIVELOGGER"
 #define LOGI(tag, message) __android_log_print(ANDROID_LOG_INFO, tag, "%s", message)

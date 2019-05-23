@@ -566,7 +566,9 @@ LOCAL_SRC_FILES     += \
 ./exoplayer/ffmpeg_jni.cc \
 ./fast-edge.cpp \
 ./genann.c \
-./secureid_ocr.cpp
+./secureid_ocr.cpp \
+./Logger.cpp \
+./Log.cpp
 
 include $(BUILD_SHARED_LIBRARY)
 

@@ -13,38 +13,38 @@
 #include "image.h"
 #include "libtgvoip/client/android/tg_voip_jni.h"
 //#include "native.h"
-//#include "Logger.h"
+#include "Logger.h"
 
-int registerNativeTgNetFunctions(JavaVM *vm, JNIEnv *env);
-int videoOnJNILoad(JavaVM *vm, JNIEnv *env);
+extern jint registerNativeTgNetFunctions(JavaVM *vm, JNIEnv *env);
+extern jint videoOnJNILoad(JavaVM *vm, JNIEnv *env);
 
 jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv *env = 0;
     srand(time(NULL));
 
     if ((*vm)->GetEnv(vm, (void **) &env, JNI_VERSION_1_6) != JNI_OK) {
-        //logIt("JNI_VERSION_1_6");
+        logIt("JNI_VERSION_1_6");
         return -1;
     }
 
     if (imageOnJNILoad(vm, env) != JNI_TRUE) {
-        //logIt("imageOnJNILoad");
+        logIt("imageOnJNILoad");
         return -1;
     }
 
     if (videoOnJNILoad(vm, env) != JNI_TRUE) {
-        //logIt("videoOnJNILoad");
+        logIt("videoOnJNILoad");
         return -1;
     }
 
     if (registerNativeTgNetFunctions(vm, env) != JNI_TRUE) {
-        //logIt("registerNativeTgNetFunctions");
+        logIt("registerNativeTgNetFunctions");
         return -1;
     }
 
     tgvoipRegisterNatives(env);
 
-    //logIt("JNI_OnLoad");
+    logIt("JNI_OnLoad");
 
     //return JNILoad(vm, reserved);
     return JNI_VERSION_1_6;

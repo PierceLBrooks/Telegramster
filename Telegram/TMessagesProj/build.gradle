@@ -45,6 +45,7 @@ dependencies {
     implementation 'net.hockeyapp.android:HockeySDK:5.1.1'
     implementation 'com.googlecode.mp4parser:isoparser:1.0.6'
     implementation 'com.stripe:stripe-android:2.0.2'
+    implementation project(path: ':sfml', configuration: 'default')
 }
 
 android {
@@ -306,7 +307,7 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionName "5.4.0"
 
 		vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
@@ -314,13 +315,13 @@ android {
         externalNativeBuild {
             ndkBuild {
                 cFlags ""
-                cppFlags ""
+                cppFlags "-std=c++11"
                 arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-21", "-j8"
                 abiFilters "armeabi-v7a"//, "arm64-v8a", "x86", "x86_64"
             }
             cmake {
                 cFlags ""
-                cppFlags ""
+                cppFlags "-std=c++11"
                 arguments "-DANDROID_STL=c++_static"
                 abiFilters "armeabi-v7a"//, "arm64-v8a", "x86", "x86_64"
             }
