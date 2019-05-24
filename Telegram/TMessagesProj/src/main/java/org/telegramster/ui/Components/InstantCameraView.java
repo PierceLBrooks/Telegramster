@@ -663,7 +663,7 @@ public class InstantCameraView extends FrameLayout implements NotificationCenter
                 cameraThread = null;
             }
             if (cancelled) {
-                NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.audioRecordTooShort, true);
+                NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.audioRecordTooShort, new Integer(0));
                 startAnimation(false);
             }
         }

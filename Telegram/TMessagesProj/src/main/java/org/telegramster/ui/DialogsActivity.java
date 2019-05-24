@@ -1356,7 +1356,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
 
                 @Override
-                public void onSwitchRecordMode(boolean video) {
+                public void onSwitchRecordMode(int mode) {
 
                 }
 

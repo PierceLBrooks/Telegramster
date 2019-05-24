@@ -79,12 +79,12 @@ public abstract class SFMLActivity extends NativeActivity implements Lock {
 
     private static void loadLibrary(String library, boolean variant) {
         Log.d(TAG, "loadLibrary "+library);
-        if (variant) {
+        /*if (variant) {
             if (BuildConfig.DEBUG) {
                 System.loadLibrary(library+"-d");
                 return;
             }
-        }
+        }*/
         System.loadLibrary(library);
     }
 

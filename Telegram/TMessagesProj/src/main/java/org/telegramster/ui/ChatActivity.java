@@ -3501,13 +3501,13 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
 
             @Override
-            public void onSwitchRecordMode(boolean video) {
-                showVoiceHint(false, video);
+            public void onSwitchRecordMode(int mode) {
+                showVoiceHint(false, mode);
             }
 
             @Override
             public void onPreAudioVideoRecord() {
-                showVoiceHint(true, false);
+                showVoiceHint(true, 0);
             }
 
             @Override
@@ -4654,7 +4654,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         voiceHintAnimation.start();
     }
 
-    private void showVoiceHint(boolean hide, boolean video) {
+    private void showVoiceHint(boolean hide, int mode) {
         if (getParentActivity() == null || fragmentView == null || hide && voiceHintTextView == null) {
             return;
         }
@@ -4686,7 +4686,17 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             return;
         }
 
-        voiceHintTextView.setText(video ? LocaleController.getString("HoldToVideo", R.string.HoldToVideo) : LocaleController.getString("HoldToAudio", R.string.HoldToAudio));
+        switch (mode) {
+            case 2:
+                voiceHintTextView.setText(getParentActivity().getResources().getString(R.string.HoldToVideo));
+                break;
+            case 0:
+                voiceHintTextView.setText(getParentActivity().getResources().getString(R.string.HoldToDraw));
+                break;
+            case 1:
+                voiceHintTextView.setText(getParentActivity().getResources().getString(R.string.HoldToAudio));
+                break;
+        }
 
         if (voiceHintHideRunnable != null) {
             if (voiceHintAnimation != null) {
@@ -9575,7 +9585,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 }
             }
         } else if (id == NotificationCenter.audioRecordTooShort) {
-            showVoiceHint(false, (Boolean) args[0]);
+            showVoiceHint(false, (Integer) args[0]);
         } else if (id == NotificationCenter.videoLoadingStateChanged) {
             if (chatListView != null) {
                 String fileName = (String) args[0];
@@ -9780,7 +9790,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 String key = isChannel ? "needShowRoundHintChannel" : "needShowRoundHint";
                 if (preferences.getBoolean(key, true)) {
                     if (Utilities.random.nextFloat() < 0.2f) {
-                        showVoiceHint(false, chatActivityEnterView.isInVideoMode());
+                        showVoiceHint(false, chatActivityEnterView.isInVideoMode() ? 0 : 1);
                         preferences.edit().putBoolean(key, false).commit();
                     }
                 }

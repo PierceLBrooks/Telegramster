@@ -10,6 +10,11 @@
 extern "C" {
 #endif
 
+#define SFML_ACTIVITY "org/telegramster/ui/DoodleActivity"
+#ifndef SFML_JNI_CLASS
+#define SFML_JNI_CLASS SFML_ACTIVITY
+#endif
+
 std::map<std::string, jobject>* strings = nullptr;
 JavaVM *gJvm = nullptr;
 static jobject gClassLoader;
@@ -115,8 +120,8 @@ int vibrate(sf::Time duration)
     int attachedHere = attach(&jvm, &env);
 
     // Retrieve class information
-    jclass natact = findClassWithEnv(env, "com/ssugamejam/stepdimension/SFMLActivity");
-    jclass context = findClassWithEnv(env, "com/ssugamejam/stepdimension/SFMLActivity");
+    jclass natact = findClassWithEnv(env, SFML_ACTIVITY);
+    jclass context = findClassWithEnv(env, SFML_ACTIVITY);
 
     // Get the value of a constant
     jfieldID fid = env->GetStaticFieldID(context, "VIBRATOR_SERVICE", "Ljava/lang/String;");

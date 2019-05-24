@@ -327,7 +327,7 @@ android {
             }
         }
 
-        manifestPlaceholders = [applicationClassName:"ApplicationLoader",androidAppLibName:"sfml-activity-d",sfmlAppLibName:"native-lib"]
+        manifestPlaceholders = [applicationClassName:"ApplicationLoader",androidAppLibName:"sfml-activity",sfmlAppLibName:"sfml_android"]
     }
 }
 

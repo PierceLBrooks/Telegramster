@@ -16,6 +16,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.ClipDescription;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
@@ -83,6 +84,7 @@ import org.telegramster.ui.ActionBar.AlertDialog;
 import org.telegramster.ui.ActionBar.Theme;
 import org.telegramster.ui.ChatActivity;
 import org.telegramster.ui.DialogsActivity;
+import org.telegramster.ui.DoodleActivity;
 import org.telegramster.ui.GroupStickersActivity;
 import org.telegramster.ui.LaunchActivity;
 import org.telegramster.ui.StickersActivity;
@@ -107,7 +109,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
         void didPressedAttachButton();
         void needStartRecordVideo(int state);
         void needChangeVideoPreviewState(int state, float seekProgress);
-        void onSwitchRecordMode(boolean video);
+        void onSwitchRecordMode(int mode);
         void onPreAudioVideoRecord();
         void needStartRecordAudio(int state);
         void needShowMediaBanHint();
@@ -182,6 +184,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
     private AnimatorSet audioVideoButtonAnimation;
     private ImageView audioSendButton;
     private ImageView videoSendButton;
+    private ImageView drawSendButton;
     private FrameLayout recordPanel;
     private FrameLayout recordedAudioPanel;
     private VideoTimelineView videoTimelineView;
@@ -357,7 +360,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
         @Override
         public void run() {
             if (delegate != null) {
-                delegate.needStartRecordVideo(0);
+                delegateNeedStartRecordVideo(delegate, 0);
             }
         }
     };
@@ -377,6 +380,10 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
             recordSendText.setAlpha(0.0f);
             slideText.setAlpha(1.0f);
             slideText.setTranslationY(0);
+            if (drawSendButton != null && drawSendButton.getTag() != null) {
+                parentActivity.startActivity(new Intent(parentActivity, DoodleActivity.class));
+                return;
+            }
             if (videoSendButton != null && videoSendButton.getTag() != null) {
                 if (Build.VERSION.SDK_INT >= 23) {
                     boolean hasAudio = parentActivity.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
@@ -407,7 +414,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
                         return;
                     }
                 }
-                delegate.needStartRecordAudio(1);
+                delegateNeedStartRecordAudio(delegate, 1);
                 startedDraggingX = -1;
                 MediaController.getInstance().startRecording(currentAccount, dialog_id, replyingMessageObject);
                 updateRecordIntefrace();
@@ -578,10 +585,10 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
                     if (event.getAction() == MotionEvent.ACTION_UP) {
                         if (lockBackgroundDrawable.getBounds().contains(x, y)) {
                             if (videoSendButton != null && videoSendButton.getTag() != null) {
-                                delegate.needStartRecordVideo(3);
+                                delegateNeedStartRecordVideo(delegate, 3);
                             } else {
                                 MediaController.getInstance().stopRecording(2);
-                                delegate.needStartRecordAudio(0);
+                                delegateNeedStartRecordAudio(delegate, 0);
                             }
                         }
                     }
@@ -1065,7 +1072,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
         recordDeleteImageView.setOnClickListener(v -> {
             if (videoToSendMessageObject != null) {
                 CameraController.getInstance().cancelOnInitRunnable(onFinishInitCameraRunnable);
-                delegate.needStartRecordVideo(2);
+                delegateNeedStartRecordVideo(delegate, 2);
             } else {
                 MessageObject playing = MediaController.getInstance().getPlayingMessageObject();
                 if (playing != null && playing == audioToSendMessageObject) {
@@ -1177,9 +1184,9 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
         recordSendText.setOnClickListener(v -> {
             if (hasRecordVideo && videoSendButton.getTag() != null) {
                 CameraController.getInstance().cancelOnInitRunnable(onFinishInitCameraRunnable);
-                delegate.needStartRecordVideo(2);
+                delegateNeedStartRecordVideo(delegate, 2);
             } else {
-                delegate.needStartRecordAudio(0);
+                delegateNeedStartRecordAudio(delegate, 0);
                 MediaController.getInstance().stopRecording(0);
             }
             recordingAudioVideo = false;
@@ -1214,9 +1221,9 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
                     if (!hasRecordVideo || calledRecordRunnable) {
                         startedDraggingX = -1;
                         if (hasRecordVideo && videoSendButton.getTag() != null) {
-                            delegate.needStartRecordVideo(1);
+                            delegateNeedStartRecordVideo(delegate, 1);
                         } else {
-                            delegate.needStartRecordAudio(0);
+                            delegateNeedStartRecordAudio(delegate, 0);
                             MediaController.getInstance().stopRecording(1);
                         }
                         recordingAudioVideo = false;
@@ -1244,16 +1251,16 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
                 }
                 if (recordAudioVideoRunnableStarted) {
                     AndroidUtilities.cancelRunOnUIThread(recordAudioVideoRunnable);
-                    delegate.onSwitchRecordMode(videoSendButton.getTag() == null);
-                    setRecordVideoButtonVisible(videoSendButton.getTag() == null, true);
+                    delegate.onSwitchRecordMode((videoSendButton.getTag() == drawSendButton.getTag()) ? 0 : ((videoSendButton.getTag() != null) ? 1 : 2));
+                    setRecordVideoButtonVisible((videoSendButton.getTag() == null || drawSendButton.getTag() == null), true);
                     performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
                 } else if (!hasRecordVideo || calledRecordRunnable) {
                     startedDraggingX = -1;
                     if (hasRecordVideo && videoSendButton.getTag() != null) {
                         CameraController.getInstance().cancelOnInitRunnable(onFinishInitCameraRunnable);
-                        delegate.needStartRecordVideo(1);
+                        delegateNeedStartRecordVideo(delegate, 1);
                     } else {
-                        delegate.needStartRecordAudio(0);
+                        delegateNeedStartRecordAudio(delegate, 0);
                         MediaController.getInstance().stopRecording(1);
                     }
                     recordingAudioVideo = false;
@@ -1280,9 +1287,9 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
                 if (x < -distCanMove) {
                     if (hasRecordVideo && videoSendButton.getTag() != null) {
                         CameraController.getInstance().cancelOnInitRunnable(onFinishInitCameraRunnable);
-                        delegate.needStartRecordVideo(2);
+                        delegateNeedStartRecordVideo(delegate, 2);
                     } else {
-                        delegate.needStartRecordAudio(0);
+                        delegateNeedStartRecordAudio(delegate, 0);
                         MediaController.getInstance().stopRecording(0);
                     }
                     recordingAudioVideo = false;
@@ -1339,6 +1346,13 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
             videoSendButton.setImageResource(R.drawable.ic_msg_panel_video);
             videoSendButton.setPadding(0, 0, AndroidUtilities.dp(4), 0);
             audioVideoButtonContainer.addView(videoSendButton, LayoutHelper.createFrame(48, 48));
+
+            drawSendButton = new ImageView(context);
+            drawSendButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            drawSendButton.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_chat_messagePanelIcons), PorterDuff.Mode.MULTIPLY));
+            drawSendButton.setImageResource(R.drawable.floating_pencil);
+            drawSendButton.setPadding(0, 0, AndroidUtilities.dp(4), 0);
+            audioVideoButtonContainer.addView(drawSendButton, LayoutHelper.createFrame(48, 48));
         }
 
         recordCircle = new RecordCircle(context);
@@ -1466,50 +1480,74 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
         return sendButton.getVisibility() == VISIBLE;
     }
 
+    private void resetSendButton(View sendButton, boolean audio) {
+        if (sendButton == null) {
+            return;
+        }
+        if (!audio) {
+            sendButton.setScaleX((sendButton.getTag() != null) ? 1.0f : 0.1f);
+            sendButton.setScaleY((sendButton.getTag() != null) ? 1.0f : 0.1f);
+            sendButton.setAlpha((sendButton.getTag() != null) ? 1.0f : 0.0f);
+        } else {
+            sendButton.setScaleX(((drawSendButton.getTag() == null) && (videoSendButton.getTag() == null)) ? 1.0f : 0.1f);
+            sendButton.setScaleY(((drawSendButton.getTag() == null) && (videoSendButton.getTag() == null)) ? 1.0f : 0.1f);
+            sendButton.setAlpha(((drawSendButton.getTag() == null) && (videoSendButton.getTag() == null)) ? 1.0f : 0.0f);
+        }
+    }
+
+    private void delegateNeedStartRecordAudio(ChatActivityEnterViewDelegate delegate, int state) {
+        if (delegate == null) {
+            return;
+        }
+        if (drawSendButton != null) {
+            if (drawSendButton.getTag() != null) {
+                delegate.needStartRecordAudio(0);
+                return;
+            }
+        }
+        delegate.needStartRecordAudio(state);
+    }
+
+    private void delegateNeedStartRecordVideo(ChatActivityEnterViewDelegate delegate, int state) {
+        if (delegate == null) {
+            return;
+        }
+        if (videoSendButton == null) {
+            delegate.needStartRecordVideo(0);
+            return;
+        }
+        if (videoSendButton.getTag() == null) {
+            delegate.needStartRecordVideo(0);
+            return;
+        }
+        if (drawSendButton != null) {
+            if (drawSendButton.getTag() != null) {
+                delegate.needStartRecordVideo(0);
+                return;
+            }
+        }
+        delegate.needStartRecordVideo(state);
+    }
+
     private void setRecordVideoButtonVisible(boolean visible, boolean animated) {
+        if (videoSendButton == null && drawSendButton == null) {
+            return;
+        }
+        if (drawSendButton == null) {
+            return;
+        }
+        drawSendButton.setTag((visible && drawSendButton.getTag() == null && videoSendButton.getTag() == null) ? 1 : null);
         if (videoSendButton == null) {
             return;
         }
-        videoSendButton.setTag(visible ? 1 : null);
+        videoSendButton.setTag((visible && drawSendButton.getTag() == null && videoSendButton.getTag() == null) ? 1 : null);
         if (audioVideoButtonAnimation != null) {
             audioVideoButtonAnimation.cancel();
             audioVideoButtonAnimation = null;
         }
-        if (animated) {
-            SharedPreferences preferences = MessagesController.getGlobalMainSettings();
-            boolean isChannel = false;
-            if ((int) dialog_id < 0) {
-                TLRPC.Chat chat = MessagesController.getInstance(currentAccount).getChat(-(int) dialog_id);
-                isChannel = ChatObject.isChannel(chat) && !chat.megagroup;
-            }
-            preferences.edit().putBoolean(isChannel ? "currentModeVideoChannel" : "currentModeVideo", visible).commit();
-            audioVideoButtonAnimation = new AnimatorSet();
-            audioVideoButtonAnimation.playTogether(
-                    ObjectAnimator.ofFloat(videoSendButton, "scaleX", visible ? 1.0f : 0.1f),
-                    ObjectAnimator.ofFloat(videoSendButton, "scaleY", visible ? 1.0f : 0.1f),
-                    ObjectAnimator.ofFloat(videoSendButton, "alpha", visible ? 1.0f : 0.0f),
-                    ObjectAnimator.ofFloat(audioSendButton, "scaleX", visible ? 0.1f : 1.0f),
-                    ObjectAnimator.ofFloat(audioSendButton, "scaleY", visible ? 0.1f : 1.0f),
-                    ObjectAnimator.ofFloat(audioSendButton, "alpha", visible ? 0.0f : 1.0f));
-            audioVideoButtonAnimation.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    if (animation.equals(audioVideoButtonAnimation)) {
-                        audioVideoButtonAnimation = null;
-                    }
-                }
-            });
-            audioVideoButtonAnimation.setInterpolator(new DecelerateInterpolator());
-            audioVideoButtonAnimation.setDuration(150);
-            audioVideoButtonAnimation.start();
-        } else {
-            videoSendButton.setScaleX(visible ? 1.0f : 0.1f);
-            videoSendButton.setScaleY(visible ? 1.0f : 0.1f);
-            videoSendButton.setAlpha(visible ? 1.0f : 0.0f);
-            audioSendButton.setScaleX(visible ? 0.1f : 1.0f);
-            audioSendButton.setScaleY(visible ? 0.1f : 1.0f);
-            audioSendButton.setAlpha(visible ? 0.0f : 1.0f);
-        }
+        resetSendButton(drawSendButton, false);
+        resetSendButton(videoSendButton, false);
+        resetSendButton(audioSendButton, true);
     }
 
     public boolean isRecordingAudioVideo() {
@@ -1523,9 +1561,9 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
     public void cancelRecordingAudioVideo() {
         if (hasRecordVideo && videoSendButton.getTag() != null) {
             CameraController.getInstance().cancelOnInitRunnable(onFinishInitCameraRunnable);
-            delegate.needStartRecordVideo(2);
+            delegateNeedStartRecordVideo(delegate, 2);
         } else {
-            delegate.needStartRecordAudio(0);
+            delegateNeedStartRecordAudio(delegate, 0);
             MediaController.getInstance().stopRecording(0);
         }
         recordingAudioVideo = false;
@@ -2044,7 +2082,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
 
     private void sendMessage() {
         if (videoToSendMessageObject != null) {
-            delegate.needStartRecordVideo(4);
+            delegateNeedStartRecordVideo(delegate, 4);
             hideRecordedAudioPanel();
             checkSendButton(true);
             return;
@@ -2505,7 +2543,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
             AndroidUtilities.lockOrientation(parentActivity);
 
             if (delegate != null) {
-                delegate.needStartRecordAudio(0);
+                delegateNeedStartRecordAudio(delegate, 0);
             }
             recordPanel.setVisibility(VISIBLE);
             recordCircle.setVisibility(VISIBLE);
@@ -3622,7 +3660,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
             }
             if (videoSendButton != null && videoSendButton.getTag() != null && t >= 59500) {
                 startedDraggingX = -1;
-                delegate.needStartRecordVideo(3);
+                delegateNeedStartRecordVideo(delegate, 3);
             }
         } else if (id == NotificationCenter.closeChats) {
             if (messageEditText != null && messageEditText.isFocused()) {

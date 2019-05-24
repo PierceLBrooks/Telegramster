@@ -351,7 +351,7 @@ public class PopupNotificationActivity extends Activity implements NotificationC
             }
 
             @Override
-            public void onSwitchRecordMode(boolean video) {
+            public void onSwitchRecordMode(int mode) {
 
             }
 

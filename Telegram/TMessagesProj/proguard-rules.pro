@@ -3,6 +3,7 @@
 -keepclassmembernames class * {
     @com.google.android.gms.common.annotation.KeepName *;
 }
+-keep class com.piercelbrooks.** { *; }
 -keep class org.telegramster.** { *; }
 #-keep class com.google.android.exoplayer2.** { *; }
 -keep class com.google.android.exoplayer2.ext.** { *; }
