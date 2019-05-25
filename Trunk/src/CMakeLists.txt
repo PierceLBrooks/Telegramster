@@ -27,6 +27,11 @@ set(PROJECT_FILES
 	${INC}/native-lib.hpp
 	${SRC}/Log.cpp
 	${INC}/Log.hpp
+	${SRC}/MainState.cpp
+	${INC}/MainState.hpp
+	${SRC}/State.cpp
+	${INC}/State.hpp
+	${INC}/DrawableStack.hpp
 )
 
 message(${LIBRARIES})

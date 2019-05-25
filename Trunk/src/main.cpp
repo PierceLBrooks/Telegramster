@@ -1,4 +1,6 @@
 #include "native-lib.hpp"
+#include "MainState.hpp"
+#include <SFML/System/Vector2.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +30,11 @@ int main(int argc, char *argv[])
     // so we'll have to track that. You can do minor background
     // work, but keep battery life in mind.
     bool active = true;
+	
+	sf::Vector2i cursor;
+	sfml::MainState* mainState = new sfml::MainState();
+	mainState->window = sf::Vector2f(window.getSize());
+	mainState->enter();
 
     while (window.isOpen())
     {
@@ -64,21 +71,39 @@ int main(int argc, char *argv[])
                     active = true;
                     break;
                 case sf::Event::TouchBegan:
+					mainState->drawing = true;
                     if (event.touch.finger == 0)
                     {
                         vibrate(sf::milliseconds(10));
                     }
-                    break;
+					cursor.x = event.touch.x;
+					cursor.y = event.touch.y;
+					break;
+                case sf::Event::TouchMoved:
+					cursor.x = event.touch.x;
+					cursor.y = event.touch.y;
+					break;
+				case sf::Event::TouchEnded:
+					mainState->drawing = false;
+					cursor.x = event.touch.x;
+					cursor.y = event.touch.y;
+					break;
             }
         }
 
         if (active) {
+			mainState->cursor = sf::Vector2f(cursor);
+			mainState->update();
             window.clear(background);
+            window.draw(*(mainState->drawableStack));
             window.display();
         } else {
             sf::sleep(sf::milliseconds(100));
         }
     }
+	
+	mainState->exit();
+	delete mainState;
 
     // Detach thread again
     vm->DetachCurrentThread();
