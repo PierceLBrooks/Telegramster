@@ -2,6 +2,58 @@
 #include "MainState.hpp"
 #include <SFML/System/Vector2.hpp>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+JNIEXPORT jint JNICALL Java_com_piercelbrooks_sfml_SFMLActivity_getNativeWidth(JNIEnv *env, jobject thiz)
+{
+    return (jint)(sfml::MainState::instance->pictureImg->getSize().x);
+}
+
+JNIEXPORT jint JNICALL Java_com_piercelbrooks_sfml_SFMLActivity_getNativeHeight(JNIEnv *env, jobject thiz)
+{
+    return (jint)(sfml::MainState::instance->pictureImg->getSize().y);
+}
+
+JNIEXPORT void JNICALL Java_com_piercelbrooks_sfml_SFMLActivity_getNativePixels(JNIEnv *env, jobject thiz, jobjectArray pixels)
+{
+    // https://stackoverflow.com/a/6752105
+    int len1 = env->GetArrayLength(pixels);
+    for (int i=0; i<len1; ++i){
+        jobjectArray oneDim = (jobjectArray)(env->GetObjectArrayElement(pixels, i));
+        int len2 = env->GetArrayLength(oneDim);
+        for (int j=0; j<len2; ++j) {
+            jintArray twoDim = (jintArray)(env->GetObjectArrayElement(oneDim, j));
+            int len3 = env->GetArrayLength(twoDim);
+            jint *elements = env->GetIntArrayElements(twoDim, 0);
+            for (int k=0; k<len3; ++k) {
+                switch (k) {
+                    case 0:
+                        elements[k] = (jint)(sfml::MainState::instance->pictureImg->getPixel(i, j).a);
+                        break;
+                    case 1:
+                        elements[k] = (jint)(sfml::MainState::instance->pictureImg->getPixel(i, j).r);
+                        break;
+                    case 2:
+                        elements[k] = (jint)(sfml::MainState::instance->pictureImg->getPixel(i, j).g);
+                        break;
+                    case 3:
+                        elements[k] = (jint)(sfml::MainState::instance->pictureImg->getPixel(i, j).b);
+                        break;
+                }
+            }
+            env->ReleaseIntArrayElements(twoDim, elements, 0);
+        }
+    }
+
+}
+
+#ifdef __cplusplus
+}
+#endif
+
 int main(int argc, char *argv[])
 {
     // Retrieve the JVM

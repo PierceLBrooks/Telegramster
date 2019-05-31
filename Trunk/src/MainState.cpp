@@ -5,10 +5,12 @@
 
 #define PI 4.0f*atan(1.0f)
 
+sfml::MainState* sfml::MainState::instance = nullptr;
+
 sfml::MainState::MainState() :
 	State()
 {
-	
+	instance = this;
 }
 
 bool sfml::MainState::checkDraw() const

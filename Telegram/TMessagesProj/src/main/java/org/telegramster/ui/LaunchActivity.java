@@ -2225,6 +2225,18 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
     }
 
     @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        intent.putExtra("requestCode", requestCode);
+        super.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
+        intent.putExtra("requestCode", requestCode);
+        super.startActivityForResult(intent, requestCode, options);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (SharedConfig.passcodeHash.length() != 0 && SharedConfig.lastPauseTime != 0) {
             SharedConfig.lastPauseTime = 0;

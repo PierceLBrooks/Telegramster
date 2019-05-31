@@ -140,4 +140,20 @@ public abstract class SFMLActivity extends NativeActivity implements Lock {
     }
 
     protected abstract String getNativeClass();
+
+    protected int getWidth() {
+        return getNativeWidth();
+    }
+
+    protected int getHeight() {
+        return getNativeHeight();
+    }
+
+    protected void getPixels(int[][][] pixels) {
+        getNativePixels(pixels);
+    }
+
+    private native int getNativeWidth();
+    private native int getNativeHeight();
+    private native void getNativePixels(int[][][] pixels);
 }

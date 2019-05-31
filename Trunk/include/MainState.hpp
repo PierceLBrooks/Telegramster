@@ -44,6 +44,8 @@ namespace sfml
 			sf::Text* brushSizeSliderTxt;
 			sf::Font* font;
 
+			static MainState* instance;
+
 		private:
 			bool checkDraw() const;
 	};

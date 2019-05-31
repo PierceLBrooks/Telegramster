@@ -7120,6 +7120,16 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     @Override
     public void onActivityResultFragment(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == DoodleActivity.getRequestCode()) {
+                if (data == null || data.getData() == null) {
+                    showAttachmentError();
+                    return;
+                }
+                Uri uri = data.getData();
+                fillEditingMediaWithCaption(null, null);
+                SendMessagesHelper.prepareSendingPhoto(AndroidUtilities.getPath(uri), null, dialog_id, replyingMessageObject, null, null, null, null, 0, editingMessageObject);
+                return;
+            }
             if (requestCode == 0 || requestCode == 2) {
                 createChatAttachView();
                 if (chatAttachAlert != null) {

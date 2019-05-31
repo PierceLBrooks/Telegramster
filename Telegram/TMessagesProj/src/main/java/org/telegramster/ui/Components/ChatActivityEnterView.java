@@ -381,7 +381,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
             slideText.setAlpha(1.0f);
             slideText.setTranslationY(0);
             if (drawSendButton != null && drawSendButton.getTag() != null) {
-                parentActivity.startActivity(new Intent(parentActivity, DoodleActivity.class));
+                parentActivity.startActivityForResult(new Intent(parentActivity, DoodleActivity.class), 0);
                 return;
             }
             if (videoSendButton != null && videoSendButton.getTag() != null) {
