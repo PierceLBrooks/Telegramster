@@ -19,7 +19,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/../../SFML-2.4.1/include)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../include)
 
-list(APPEND DEFINES "SFML_JNI_CLASS=\"org/telegramster/ui/DoodleActivity\"")
+list(APPEND DEFINES "SFML_JNI_CLASS=\"${SFML_JNI_CLASS}\"")
 
 set(PROJECT_FILES
 	${SRC}/main.cpp

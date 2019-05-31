@@ -105,6 +105,7 @@ android {
             buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
             buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
             buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
+            buildConfigField "String", "SFML_JNI_CLASS", "\""+SFML_JNI_CLASS+"\""
         }
 
         debugMultidex {
@@ -120,6 +121,7 @@ android {
             buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
             buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
             buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
+            buildConfigField "String", "SFML_JNI_CLASS", "\""+SFML_JNI_CLASS+"\""
         }
 
         /*
@@ -135,6 +137,7 @@ android {
             buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
             buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
             buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
+            buildConfigField "String", "SFML_JNI_CLASS", "\""+SFML_JNI_CLASS+"\""
         }
         */
 
@@ -150,6 +153,7 @@ android {
             buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH+"\""
             buildConfigField "String", TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG, "\""+PROP_TELEGRAMSTER_HOCKEYAPP_HASH_DEBUG+"\""
             buildConfigField "String", TELEGRAMSTER_SMS_HASH, "\""+PROP_TELEGRAMSTER_SMS_HASH+"\""
+            buildConfigField "String", "SFML_JNI_CLASS", "\""+SFML_JNI_CLASS+"\""
         }
     }
 

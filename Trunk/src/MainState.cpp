@@ -11,6 +11,15 @@ sfml::MainState::MainState() :
 	
 }
 
+bool sfml::MainState::checkDraw() const
+{
+    if ((drawing) || (cursor.x >= 0.0f) || (cursor.y >= 0.0f))
+    {
+        return true;
+    }
+    return false;
+}
+
 void sfml::MainState::enter()
 {
 	drawableStack = new DrawableStack();
@@ -166,11 +175,11 @@ void sfml::MainState::update()
     {
         brushColor = colorSelect->getFillColor();
     }
-    if (drawing)
+    if (checkDraw())
     {
         if ((mouse.x >= 0) && (mouse.y >= 0) && (mouse.x < pictureImg->getSize().x) && (mouse.y < pictureImg->getSize().y))
         {
-            if (drawing)
+            if (checkDraw())
             {
                 drawLine(mousePrev, mouse);
             }
@@ -178,7 +187,7 @@ void sfml::MainState::update()
             pictureTex->loadFromImage(*pictureImg);
             drawing = true;
         }
-        if (!drawing)
+        if (!checkDraw())
         {
             if ((paletteColorSpr->getPosition().x-32 <= mouseReal.x) &&
                 (paletteColorSpr->getPosition().y <= mouseReal.y) &&

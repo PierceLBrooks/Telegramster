@@ -43,6 +43,9 @@ namespace sfml
 			sf::Text* colorSelectTxt;
 			sf::Text* brushSizeSliderTxt;
 			sf::Font* font;
+
+		private:
+			bool checkDraw() const;
 	};
 }
 

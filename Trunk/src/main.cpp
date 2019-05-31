@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     // work, but keep battery life in mind.
     bool active = true;
 	
-	sf::Vector2i cursor;
+	sf::Vector2i cursor = sf::Vector2i(-1, -1);
 	sfml::MainState* mainState = new sfml::MainState();
 	mainState->window = sf::Vector2f(window.getSize());
 	mainState->enter();
@@ -94,6 +94,9 @@ int main(int argc, char *argv[])
         if (active) {
 			mainState->cursor = sf::Vector2f(cursor);
 			mainState->update();
+			if (!mainState->drawing) {
+			    cursor = sf::Vector2i(-1, -1);
+			}
             window.clear(background);
             window.draw(*(mainState->drawableStack));
             window.display();

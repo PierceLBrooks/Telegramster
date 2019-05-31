@@ -12,6 +12,7 @@ android {
                 cFlags "-Wno-c++11-narrowing"
                 cppFlags "-Wno-c++11-narrowing"
                 abiFilters "armeabi-v7a"
+                arguments "-DSFML_JNI_CLASS:STRING="+SFML_JNI_CLASS
             }
         }
     }

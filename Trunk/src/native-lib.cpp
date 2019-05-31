@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-#define SFML_ACTIVITY "org/telegramster/ui/DoodleActivity"
+#define SFML_ACTIVITY "com/piercelbrooks/sfml/SFMLActivity"
 #ifndef SFML_JNI_CLASS
 #define SFML_JNI_CLASS SFML_ACTIVITY
 #endif
@@ -32,6 +32,9 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *pjvm, void *reserved) {
     gFindClassMethod = env->GetMethodID(classLoaderClass, "findClass", "(Ljava/lang/String;)Ljava/lang/Class;");
 
     //gJvm->DetachCurrentThread();
+
+    LOG(SFML_ACTIVITY);
+    LOG(SFML_JNI_CLASS);
 
     return JNI_VERSION_1_6;
 }
